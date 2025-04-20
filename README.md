@@ -46,7 +46,7 @@ MenstrualCyclePredictionApp/
 │   └── main.py                       # Streamlit app
 ├── data/
 │   ├── prediction_history.csv        # User-specific predictions
-│   └── users.db                      # SQLite DB for user auth
+│                       
 ├── models/
 │   └── menstrual_model_xgb.pkl       # Trained XGBoost model
 ├── src/
@@ -57,6 +57,7 @@ MenstrualCyclePredictionApp/
 │   └── menstrual_data_with_symptoms.csv
 ├── requirements.txt
 └── README.md
+└── users.db                           # SQLite DB for user authentication
 ```
 
 ---
