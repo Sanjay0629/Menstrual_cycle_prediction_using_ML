@@ -45,18 +45,17 @@ MenstrualCyclePredictionApp/
 ├── app/
 │   └── main.py                       # Streamlit app
 ├── data/
-│   └── prediction_history.csv        # User-specific predictions                      
+│   └── menstrual_data_with_symptoms.csv                         
 ├── models/
 │   └── menstrual_model_xgb.pkl       # Trained XGBoost model
 ├── src/
 │   ├── preprocessing.py              # Data preprocessing
 │   ├── model_training.py             # RandomForest training (archived)
 │   └── xgboost_training.py           # XGBoost training
-├── enhanced_dataset/
-│   └── menstrual_data_with_symptoms.csv
 ├── requirements.txt
-└── README.md
-└── users.db                           # SQLite DB for user authentication
+├── Prediction_history.csv            # User-specific predictions    
+├──  README.md
+├──  users.db                         # SQLite DB for user authentication
 ```
 
 ---
