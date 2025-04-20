@@ -1,7 +1,7 @@
 
 # 🌸 Menstrual Cycle Predictor using Machine Learning
 
-An intelligent and user-personalized menstrual cycle prediction app built with **Streamlit**, **XGBoost**, and **SQLite**. It allows users to track their cycles, mood, and cramps, and provides accurate predictions based on user symptoms and cycle patterns.
+An intelligent and user-personalized menstrual cycle prediction app built with **Streamlit**, **XGBoost & Random Forest**, and **SQLite**. It allows users to track their cycles, mood, and cramps, and provides accurate predictions based on user symptoms and cycle patterns.
 
 ---
 
@@ -21,7 +21,7 @@ An intelligent and user-personalized menstrual cycle prediction app built with *
 
 ## 🧠 Machine Learning
 
-- Model: `XGBoostRegressor`
+- Model: `XGBoostRegressor & Random Forest`
 - Trained on a symptom-enhanced menstrual dataset
 - Features used:
   - Mean Cycle Length
