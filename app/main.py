@@ -4,13 +4,18 @@ import streamlit as st
 import joblib
 import datetime
 import numpy as np
+import pandas as pd
+import os
 
-# Load model
-model = joblib.load("models/menstrual_model.pkl")
+# Load XGBoost model
+model = joblib.load("models/menstrual_model_xgb.pkl")
+
+# CSV file to store history
+HISTORY_FILE = "prediction_history.csv"
 
 # UI Title
-st.title("🌸 Menstrual Cycle Predictor with Symptom Tracking")
-st.write("Enter your recent cycle details and symptoms to predict your next cycle.")
+st.title("🌸 Menstrual Cycle Predictor")
+st.write("Enter your recent cycle details and symptoms to predict your next period date.")
 
 # Form for user input
 with st.form("cycle_form"):
@@ -50,5 +55,76 @@ if submitted:
     predicted_cycle_length = model.predict(input_data)[0]
     next_period_date = last_period_date + datetime.timedelta(days=round(predicted_cycle_length))
 
+    # Show result
     st.success(f"✅ Predicted Cycle Length: {round(predicted_cycle_length)} days")
     st.info(f"📅 Estimated Next Period Start Date: **{next_period_date.strftime('%B %d, %Y')}**")
+
+    # 🔄 Save to CSV history
+    entry = {
+        "Prediction Date": datetime.date.today(),
+        "Last Period Date": last_period_date,
+        "Avg Cycle": mean_cycle_length,
+        "Period Length": period_length,
+        "Mood": mood,
+        "Cramps": cramps,
+        "Predicted Cycle Length": round(predicted_cycle_length),
+        "Next Period Date": next_period_date
+    }
+
+    if os.path.exists(HISTORY_FILE):
+        history_df = pd.read_csv(HISTORY_FILE)
+    else:
+        history_df = pd.DataFrame()
+
+    history_df = pd.concat([history_df, pd.DataFrame([entry])], ignore_index=True)
+    history_df.to_csv(HISTORY_FILE, index=False)
+
+    # 📅 Show upcoming predicted cycles
+    st.subheader("📅 Upcoming Predicted Periods")
+    num_cycles = 4
+    upcoming_periods = []
+    current_date = next_period_date
+
+    for i in range(num_cycles):
+        upcoming_periods.append({
+            "Cycle ": i + 1,
+            "Start Date": current_date.strftime('%d-%m-%y')
+        })
+        current_date += datetime.timedelta(days=round(predicted_cycle_length))
+
+    st.table(upcoming_periods)
+
+# 📊 Display Prediction History
+if os.path.exists(HISTORY_FILE):
+    st.subheader("🕓 Prediction History")
+    history = pd.read_csv(HISTORY_FILE)
+    st.dataframe(history[::-1], use_container_width=True)
+
+# 🧹 Optional: Button to clear prediction history
+if os.path.exists(HISTORY_FILE):
+    st.subheader("🗑️ Clear Prediction History")
+    if st.button("Clear History"):
+        os.remove(HISTORY_FILE)
+        st.success("Prediction history cleared!")
+        st.rerun()
+
+# 📈 Trend Chart: Predicted Cycle Length Over Time
+if os.path.exists(HISTORY_FILE):
+    st.subheader("📈 Cycle Length Trend Over Time")
+    history = pd.read_csv(HISTORY_FILE)
+
+    # Convert date column
+    history["Prediction Date"] = pd.to_datetime(history["Prediction Date"], errors="coerce")
+
+    # Sort by date
+    history = history.sort_values("Prediction Date")
+
+    # Keep only relevant columns
+    trend_data = history[["Prediction Date", "Predicted Cycle Length"]].dropna()
+
+    # Rename for chart
+    trend_data = trend_data.set_index("Prediction Date")
+
+    # Plot
+    st.line_chart(trend_data)
+
