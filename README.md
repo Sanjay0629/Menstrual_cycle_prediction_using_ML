@@ -45,8 +45,7 @@ MenstrualCyclePredictionApp/
 ├── app/
 │   └── main.py                       # Streamlit app
 ├── data/
-│   ├── prediction_history.csv        # User-specific predictions
-│                       
+│   └── prediction_history.csv        # User-specific predictions                      
 ├── models/
 │   └── menstrual_model_xgb.pkl       # Trained XGBoost model
 ├── src/
