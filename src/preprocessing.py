@@ -1,3 +1,5 @@
+# src/preprocessing.py
+
 import pandas as pd
 
 def load_and_preprocess_data(filepath: str):
@@ -9,7 +11,8 @@ def load_and_preprocess_data(filepath: str):
 
     Returns:
         X (DataFrame): Features.
-        y (Series): Target.
+        y (Series): Target for regression.
+        y_class (Series): Target for binary classification.
     """
     # Load data
     df = pd.read_csv(filepath)
@@ -43,12 +46,17 @@ def load_and_preprocess_data(filepath: str):
     # Drop rows with any remaining NaNs
     df = df.dropna()
 
-    # Feature matrix (X) and target (y)
+    # Define Binary Classification Target
+    # Classify as Short (0) if LengthofCycle < 28, Long (1) if LengthofCycle >= 28
+    df["CycleType"] = (df["LengthofCycle"] >= 28).astype(int)
+
+    # Feature matrix (X) and targets (y for regression, y_class for classification)
     X = df[[
         "MeanCycleLength", "LengthofLutealPhase", "LengthofMenses",
         "TotalNumberofPeakDays", "TotalMensesScore", "Age", "BMI",
         "Mood", "Cramps", "CycleVariability", "SymptomScore"
     ]]
-    y = df["LengthofCycle"]
+    y = df["LengthofCycle"]         # Regression Target
+    y_class = df["CycleType"]       # Binary Classification Target
 
-    return X, y
+    return X, y, y_class
